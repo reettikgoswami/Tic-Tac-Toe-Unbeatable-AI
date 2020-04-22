@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./style.css";
 
-import {checkWinner} from "./utils"
+import {checkWinner , bestMove , checkTie} from "./utils"
 
 class App extends Component {
   constructor(props) {
@@ -20,23 +20,21 @@ class App extends Component {
   eventHandelar(e) {
     let index = e.target.dataset.key.split("-").map(cv=>Number(cv));
     let board = this.state.board;
-    if(board[index[0]][index[1]] !== null || this.state.winner)return;
+     if(board[index[0]][index[1]] !== null || this.state.winner)return;
+      
+   if(this.state.nextMove == 'X'){
+     board[index[0]][index[1]] = "O" ;
+     
+     if(!checkTie(board)){
+      bestMove(board , "X" , "O");
+     }
+       this.setState({
+         board: board,
+         nextMove: "X",
+       });   
+   }
 
-    if (this.state.nextMove === "X") {
-      board[index[0]][index[1]] = "X";
-      this.setState({
-        board: board,
-        nextMove: "O",
-      });
-    } else {
-      board[index[0]][index[1]] = "O";
-      this.setState({
-        board: board,
-        nextMove: "X",
-      });
-    }
-
-     this.setState({winner : checkWinner(this.state.board)})
+     this.setState({winner : checkWinner(this.state.board)});
   }
 
   render() {
