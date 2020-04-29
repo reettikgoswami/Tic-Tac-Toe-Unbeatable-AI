@@ -26,8 +26,6 @@ export function checkWinner(grid){
    return true;
  }
 
-
-
 // let ai = "X";
 // let human = "O"; 
 
