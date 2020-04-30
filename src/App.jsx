@@ -33,6 +33,8 @@ class App extends Component {
   
 
   eventHandelar(e) {
+    console.log(e.target.dataset.key);
+    if(!e.target.dataset.key){return;}
     let index = e.target.dataset.key.split("-").map((cv) => Number(cv));
     let board = this.state.board;
     if (board[index[0]][index[1]] !== null || this.state.winner) return;
@@ -124,8 +126,8 @@ class App extends Component {
                     ""
                   ) : cv === "X" ? (
                     <span data-key={i + "-" + j}>
-                      &#10005;
-                      {/* <FaSkullCrossbones data-key={i + "-" + j} /> */}
+                      {/* &#10005; */}
+                      <FaSkullCrossbones data-key={i + "-" + j} />
                       </span>
                   ) : (
                     <span data-key={i + "-" + j}>&#9711;</span>
