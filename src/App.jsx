@@ -24,17 +24,20 @@ class App extends Component {
     };
   }
 
-
-
+  componentDidMount() {
+   let computerWin = localStorage.getItem("computerWin") || 0;
+   let tiegame = localStorage.getItem("tiegame") || 0;
+   let playerWin = localStorage.getItem("playerWin") || 0;
+   this.setState({computerWin:computerWin , tiegame : tiegame , playerWin : playerWin});
+  }
+  
 
   eventHandelar(e) {
     let index = e.target.dataset.key.split("-").map((cv) => Number(cv));
     let board = this.state.board;
     if (board[index[0]][index[1]] !== null || this.state.winner) return;
-
     if (this.state.nextMove === "X") {
       board[index[0]][index[1]] = "O";
-
       if (!checkTie(board)) {
         bestMove(board, "X", "O");
       }
@@ -43,25 +46,67 @@ class App extends Component {
         nextMove: "X",
       });
     }
-
-    this.setState({ winner: checkWinner(this.state.board) });
+    
+    let winner = checkWinner(this.state.board);
+    if( winner ){
+      if(winner === "tie"){
+        localStorage.setItem("tiegame" , Number(this.state.tiegame) + 1 );
+        this.setState({ winner: winner , tiegame :  Number(this.state.tiegame) + 1 });
+      }else if(winner === "X"){
+        localStorage.setItem("computerWin" , Number(this.state.computerWin) + 1 );
+        this.setState({ winner: winner , computerWin : Number(this.state.computerWin) + 1 });
+      }else{
+        localStorage.setItem("computerWin" , Number(this.state.playerWin) + 1 );
+        this.setState({ winner: winner , playerWin : Number(this.state.playerWin) + 1 });
+      }
+    } 
   }
 
   boardClassGenerator(i, j) {
     let boardClass = "box";
-    if (i == 0) {
+    if (i === 0) {
       boardClass += " " + "border_top";
     }
-    if (j == 0) {
+    if (j === 0) {
       boardClass += " " + "border_left";
     }
-    if (i == 2) {
+    if (i === 2) {
       boardClass += " " + "border_bottom";
     }
-    if (j == 2) {
+    if (j === 2) {
       boardClass += " " + "border_right";
     }
     return boardClass;
+  }
+
+  deleteHistory(){
+    let state = {
+      board: [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null],
+      ],
+      nextMove: "X",
+      winner: null,
+      computerWin: 0,
+      tiegame:0,
+      playerWin : 0
+    };
+    localStorage.clear();
+    this.setState({...state});
+  }
+
+  replay(){
+    let state = {
+      board: [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null],
+      ],
+      nextMove: "X",
+      winner: null,
+    };
+    this.setState({...state});
   }
 
   render() {
@@ -79,8 +124,8 @@ class App extends Component {
                     ""
                   ) : cv === "X" ? (
                     <span data-key={i + "-" + j}>
-                      {/* &#10005; */}
-                      <FaSkullCrossbones/>
+                      &#10005;
+                      {/* <FaSkullCrossbones data-key={i + "-" + j} /> */}
                       </span>
                   ) : (
                     <span data-key={i + "-" + j}>&#9711;</span>
@@ -96,20 +141,20 @@ class App extends Component {
         <div className="scoreContaner">
           <div className = "playerScoreWrapper">
             <span>PLAYER(O)</span>
-            <span><strong>0</strong></span>
+        <span><strong>{this.state.playerWin}</strong></span>
           </div>
           <div className = "playerScoreWrapper">
             <span>TIE</span>
-            <span><strong>0</strong></span>
+        <span><strong>{this.state.tiegame}</strong></span>
           </div>
           <div className = "playerScoreWrapper">
             <span>COMPUTER(<FaSkullCrossbones/>)</span>
-            <span><strong>0</strong></span>
+        <span><strong>{this.state.computerWin}</strong></span>
           </div>
         </div>
           <div className="playagainResetButtonWrapper">
-          <button><FaPlay/> play again</button> 
-          <button><AiTwotoneDelete/>reset</button>
+          <button onClick ={()=>this.replay()}><FaPlay/> play again</button> 
+          <button onClick ={()=>this.deleteHistory()}><AiTwotoneDelete/>reset</button>
           </div>
       </>
     );

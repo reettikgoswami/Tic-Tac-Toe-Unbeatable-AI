@@ -90,8 +90,9 @@ strong{
 }
 .playagainResetButtonWrapper button{
     height: 30px;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 600;
+    text-transform: uppercase;
     width: 120px;
     display: flex;
     cursor: pointer;

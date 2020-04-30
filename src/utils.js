@@ -1,6 +1,4 @@
-
-// improve this function; 
-export function checkWinner(grid){
+ export function checkWinner(grid){
    if(grid[0][0]){
     if(grid[0][0] === grid[0][1]  && grid[0][1] === grid[0][2]){return grid[0][0];}
     if(grid[1][0] === grid[0][0]  && grid[0][0] === grid[2][0]){return grid[0][0];}
@@ -17,6 +15,7 @@ export function checkWinner(grid){
   }
   return checkTie(grid) ? "tie" : null;   
 }
+
  export function checkTie(grid){
    for(let i=0;i<3;i++){
      for(let j=0;j<3;j++){
